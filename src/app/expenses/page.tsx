@@ -29,20 +29,24 @@ export default function ExpensesPage() {
     e.preventDefault()
     if (!formData.title || !formData.amount || !formData.category) return
 
-    await createMutation.mutateAsync({
-      title: formData.title,
-      amount: parseFloat(formData.amount),
-      category: formData.category,
-      expense_date: formData.expense_date,
-    })
-
-    setFormData({
-      title: '',
-      amount: '',
-      category: '',
-      expense_date: new Date().toISOString().slice(0, 10),
-    })
-    setShowForm(false)
+    try {
+      await createMutation.mutateAsync({
+        title: formData.title,
+        amount: parseFloat(formData.amount),
+        category: formData.category,
+        expense_date: formData.expense_date,
+      })
+      toast.success('Expense added successfully!')
+      setFormData({
+        title: '',
+        amount: '',
+        category: '',
+        expense_date: new Date().toISOString().slice(0, 10),
+      })
+      setShowForm(false)
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong')
+    }
   }
 
   if (isLoading) {

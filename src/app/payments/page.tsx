@@ -32,22 +32,26 @@ export default function PaymentsPage() {
     e.preventDefault()
     if (!formData.project_id || !formData.amount) return
 
-    await createMutation.mutateAsync({
-      project_id: formData.project_id,
-      amount: parseFloat(formData.amount),
-      payment_date: formData.payment_date,
-      currency_code: formData.currency_code,
-      exchange_rate: parseFloat(formData.exchange_rate),
-    })
-
-    setFormData({
-      project_id: '',
-      amount: '',
-      payment_date: new Date().toISOString().slice(0, 10),
-      currency_code: 'USD',
-      exchange_rate: '1.0000',
-    })
-    setShowForm(false)
+    try {
+      await createMutation.mutateAsync({
+        project_id: formData.project_id,
+        amount: parseFloat(formData.amount),
+        payment_date: formData.payment_date,
+        currency_code: formData.currency_code,
+        exchange_rate: parseFloat(formData.exchange_rate),
+      })
+      toast.success('Payment added successfully!')
+      setFormData({
+        project_id: '',
+        amount: '',
+        payment_date: new Date().toISOString().slice(0, 10),
+        currency_code: 'USD',
+        exchange_rate: '1.0000',
+      })
+      setShowForm(false)
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong')
+    }
   }
 
   if (isLoading) {

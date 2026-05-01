@@ -27,22 +27,28 @@ export default function ProjectsPage() {
     e.preventDefault()
     if (!formData.client_id || !formData.name || !formData.total_value) return
 
-    if (editingProject) {
-      await updateMutation.mutateAsync({
-        id: editingProject.id,
-        ...formData,
-        total_value: parseFloat(formData.total_value),
-      })
-    } else {
-      await createMutation.mutateAsync({
-        ...formData,
-        total_value: parseFloat(formData.total_value),
-      })
-    }
+    try {
+      if (editingProject) {
+        await updateMutation.mutateAsync({
+          id: editingProject.id,
+          ...formData,
+          total_value: parseFloat(formData.total_value),
+        })
+        toast.success('Project updated successfully!')
+      } else {
+        await createMutation.mutateAsync({
+          ...formData,
+          total_value: parseFloat(formData.total_value),
+        })
+        toast.success('Project created successfully!')
+      }
 
-    setFormData({ client_id: '', name: '', total_value: '', status: 'active' })
-    setShowForm(false)
-    setEditingProject(null)
+      setFormData({ client_id: '', name: '', total_value: '', status: 'active' })
+      setShowForm(false)
+      setEditingProject(null)
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong')
+    }
   }
 
   const handleEdit = (project: any) => {
