@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Finance Dashboard
 
-## Getting Started
+A full-stack finance management dashboard for small software houses.
 
-First, run the development server:
+## Tech Stack
+
+- **Frontend**: Next.js 16 (React)
+- **Styling**: Tailwind CSS
+- **Backend**: Supabase (PostgreSQL + Auth + RLS)
+- **State**: TanStack React Query
+- **Charts**: Recharts
+- **Excel Export**: SheetJS (xlsx)
+
+## Setup Instructions
+
+### 1. Supabase Setup
+
+1. Create a new Supabase project at https://supabase.com
+2. Run the provided SQL schema in the Supabase SQL Editor
+3. Get your project URL and anon key from Project Settings > API
+
+### 2. Environment Variables
+
+Create `.env.local` in the project root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Create Admin Users
+
+In Supabase Dashboard:
+1. Go to Authentication > Users
+2. Create users manually
+3. Add entries to `user_roles` table with role = 'admin'
+
+Or use the Admin Management page after logging in.
+
+### 5. Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Authentication**: Secure login with Supabase Auth (admin only)
+- **Dashboard**: Overview cards and revenue vs expenses chart
+- **Clients Management**: CRUD operations for clients
+- **Projects Tracking**: Track projects, total value, received, pending
+- **Payments**: Record payments with multi-currency support
+- **Expenses**: Track expenses by category
+- **Finance Calculator**: Automatic profit calculation and founder distributions
+- **Founders**: Manage founder shares (validates 100% total)
+- **Settings**: Configure percentages for future fund, commission, reinvest
+- **Excel Export**: Export comprehensive financial reports with multiple sheets
+- **Admin Management**: Add new admin users
 
-## Learn More
+## Build
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+```

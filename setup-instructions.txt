@@ -1,0 +1,63 @@
+# Finance Dashboard Setup Instructions
+
+## 1. Create Supabase Project
+- Go to https://supabase.com and create a new project
+- Wait for the project to be ready
+
+## 2. Run Database Schema
+- Go to SQL Editor in Supabase dashboard
+- Copy and paste the entire SQL schema provided in the requirements
+- Run the SQL to create all tables, policies, and seed data
+
+## 3. Configure Authentication
+- Go to Authentication > Settings
+- Disable "Enable email confirmations" for testing (or keep enabled for production)
+- The schema auto-grants admin role to first 3 users
+
+## 4. Create Admin User
+Option A - Via Supabase Dashboard:
+1. Go to Authentication > Users
+2. Click "Add User"
+3. Create a user with email and password
+4. The trigger will automatically assign admin role (if less than 3 admins)
+5. If more than 3 admins needed, manually insert into user_roles table
+
+Option B - Via Admin Page (after setup):
+1. Set up .env.local first
+2. Login with existing admin
+3. Go to /admin to add more admins
+
+## 5. Environment Setup
+Create `.env.local` in the project root:
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+```
+
+Get these values from: Supabase Dashboard > Project Settings > API
+
+## 6. Run the Application
+```bash
+npm install
+npm run dev
+```
+
+Visit http://localhost:3000
+
+## Default Data
+The schema inserts:
+- 3 founders with equal shares (33.34%, 33.33%, 33.33%)
+- Default settings (20% future fund, 10% commission, 10% reinvest)
+- Currency table with USD, PKR, EUR, GBP, INR, AED
+
+## Pages
+- `/login` - Login page
+- `/dashboard` - Overview with revenue/expenses chart
+- `/clients` - Manage clients
+- `/projects` - Manage projects with payment tracking
+- `/payments` - Record payments (multi-currency support)
+- `/expenses` - Track expenses by category
+- `/finance` - Core financial calculations + Excel export
+- `/founders` - Manage founder shares
+- `/settings` - Configure percentages
+- `/admin` - Add new admin users
