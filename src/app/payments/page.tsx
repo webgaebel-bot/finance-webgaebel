@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { usePayments } from '@/hooks/use-payments'
-import { useCreatePayment } from '@/hooks/use-payments'
+import { usePayments, useCreatePayment, useDeletePayment } from '@/hooks/use-payments'
 import { useProjects } from '@/hooks/use-projects'
 import { useCurrencies } from '@/hooks/use-currencies'
-import { Plus } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
+import Swal from 'sweetalert2'
+import { toast } from 'sonner'
 import { format } from 'date-fns'
 
 export default function PaymentsPage() {
@@ -16,6 +17,7 @@ export default function PaymentsPage() {
   const { data: projects } = useProjects()
   const { data: currencies } = useCurrencies()
   const createMutation = useCreatePayment()
+  const deleteMutation = useDeletePayment()
 
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
@@ -187,8 +189,27 @@ export default function PaymentsPage() {
                 <td className="p-4 font-semibold text-green-600">
                   ${(payment.amount * payment.exchange_rate).toFixed(2)}
                 </td>
-                <td className="p-4 text-gray-900">
-                  {format(new Date(payment.payment_date), 'MMM dd, yyyy')}
+                <td className="p-4">
+                  <button
+                    onClick={async () => {
+                      const result = await Swal.fire({
+                        title: 'Delete payment?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!',
+                      })
+                      if (result.isConfirmed) {
+                        deleteMutation.mutate(payment.id)
+                        toast.success('Payment deleted successfully!')
+                      }
+                    }}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </td>
               </tr>
             ))}

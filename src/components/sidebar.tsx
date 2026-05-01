@@ -15,6 +15,7 @@ import {
   Settings,
   LogOut,
   Wallet,
+  Book,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -26,8 +27,8 @@ const navigation = [
   { name: 'Projects', href: '/projects', icon: FolderOpen },
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Founders', href: '/founders', icon: UserCircle },
-  { name: 'Settings', href: '/settings', icon: Settings },
-]
+  { name: 'Guidance', href: '/guidance', icon: Book },
+  { name: 'Settings', href: '/settings', icon: Settings },]
 
 export function Sidebar() {
   const pathname = usePathname()

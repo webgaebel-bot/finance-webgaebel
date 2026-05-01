@@ -1,15 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { useProjects, useCreateProject, useUpdateProject } from '@/hooks/use-projects'
+import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from '@/hooks/use-projects'
 import { useClients } from '@/hooks/use-clients'
-import { Pencil, Plus } from 'lucide-react'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
+import Swal from 'sweetalert2'
+import { toast } from 'sonner'
 
 export default function ProjectsPage() {
   const { data: projects, isLoading } = useProjects()
   const { data: clients } = useClients()
   const createMutation = useCreateProject()
   const updateMutation = useUpdateProject()
+  const deleteMutation = useDeleteProject()
 
   const [showForm, setShowForm] = useState(false)
   const [editingProject, setEditingProject] = useState<any>(null)
@@ -167,8 +170,28 @@ export default function ProjectsPage() {
                   </span>
                 </td>
                 <td className="p-4">
-                  <button onClick={() => handleEdit(project)} className="text-blue-600 hover:text-blue-800">
+                  <button onClick={() => handleEdit(project)} className="mr-2 text-blue-600 hover:text-blue-800">
                     <Pencil className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={async () => {
+                      const result = await Swal.fire({
+                        title: 'Delete project?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!',
+                      })
+                      if (result.isConfirmed) {
+                        deleteMutation.mutate(project.id)
+                        toast.success('Project deleted successfully!')
+                      }
+                    }}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </td>
               </tr>

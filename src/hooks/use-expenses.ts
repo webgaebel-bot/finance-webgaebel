@@ -23,7 +23,6 @@ export function useExpenses(month?: string) {
       return data as Expense[]
     },
     staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
   })
 }
 
@@ -43,6 +42,19 @@ export function useCreateExpense() {
         .single()
       if (error) throw error
       return data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses'] })
+    },
+  })
+}
+
+export function useDeleteExpense() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('expenses').delete().eq('id', id)
+      if (error) throw error
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] })

@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { useExpenses, useCreateExpense } from '@/hooks/use-expenses'
-import { Plus } from 'lucide-react'
+import { useExpenses, useCreateExpense, useDeleteExpense } from '@/hooks/use-expenses'
+import { Plus, Trash2 } from 'lucide-react'
+import Swal from 'sweetalert2'
+import { toast } from 'sonner'
 import { format } from 'date-fns'
 
 export default function ExpensesPage() {
@@ -11,6 +13,7 @@ export default function ExpensesPage() {
   )
   const { data: expenses, isLoading } = useExpenses(selectedMonth)
   const createMutation = useCreateExpense()
+  const deleteMutation = useDeleteExpense()
 
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
@@ -163,8 +166,30 @@ export default function ExpensesPage() {
                 <td className="p-4 font-semibold text-red-600">
                   ${expense.amount.toFixed(2)}
                 </td>
-                <td className="p-4 text-gray-900 text-sm">
+                <td className="p-4 text-gray-900">
                   {format(new Date(expense.expense_date), 'MMM dd, yyyy')}
+                </td>
+                <td className="p-4">
+                  <button
+                    onClick={async () => {
+                      const result = await Swal.fire({
+                        title: 'Delete expense?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!',
+                      })
+                      if (result.isConfirmed) {
+                        deleteMutation.mutate(expense.id)
+                        toast.success('Expense deleted successfully!')
+                      }
+                    }}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </td>
               </tr>
             ))}

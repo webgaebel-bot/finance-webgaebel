@@ -23,7 +23,6 @@ export function usePayments(month?: string) {
       return data as Payment[]
     },
     staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
   })
 }
 
@@ -48,6 +47,20 @@ export function useCreatePayment() {
         .single()
       if (error) throw error
       return data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['payments'] })
+      queryClient.invalidateQueries({ queryKey: ['projects'] })
+    },
+  })
+}
+
+export function useDeletePayment() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('payments').delete().eq('id', id)
+      if (error) throw error
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] })
